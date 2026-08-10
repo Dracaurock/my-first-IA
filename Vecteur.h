@@ -3,6 +3,8 @@
 
 #include <vector>   // on utilise std::vector pour stocker nos nombres
 
+class Matrice;  // déclaration anticipée (forward declaration) pour éviter les dépendances circulaires
+
 class Vecteur {
 private:
     std::vector<double> donnees;  // les valeurs du vecteur (ex: [1.0, 2.5, -3.0])
@@ -24,8 +26,21 @@ public:
     // Addition de deux vecteurs
     Vecteur operator+(const Vecteur& autre) const;
 
+    // Produit d'Hadamard (terme à terme) : resultat[i] = (*this)[i] * autre[i]
+    Vecteur hadamard(const Vecteur& autre) const;
+
     // Affiche le vecteur (pratique pour debug)
     void afficher() const;
+
+    // Produit extérieur : (*this) est le vecteur "colonne", autre le vecteur "ligne"
+    // Résultat : matrice de taille getTaille() x autre.getTaille()
+    Matrice produitExterieur(const Vecteur& autre) const;
+
+    // Multiplication par un scalaire : chaque élément * k
+    Vecteur operator*(double k) const;
+
+    // Soustraction terme à terme
+    Vecteur operator-(const Vecteur& autre) const;
 };
 
 #endif

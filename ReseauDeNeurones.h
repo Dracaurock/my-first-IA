@@ -14,7 +14,7 @@ public:
     void ajouterCouche(int n_entree, int n_sortie);
 
     // Propagation avant à travers TOUTES les couches
-    Vecteur propagerAvant(const Vecteur& entree) const;
+    Vecteur propagerAvant(const Vecteur& entree);
 };
 
 #endif

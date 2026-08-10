@@ -1,11 +1,10 @@
 #include "Couche.h"
 #include "Activations.h"
-#include <random>   // n'oublie pas cet include
+#include <random>
 
 Couche::Couche(int n_entree, int n_sortie)
-    : W(n_sortie, n_entree), b(n_sortie)
+    : W(n_sortie, n_entree), b(n_sortie),derniereEntree(n_entree), dernierZ(n_sortie)
 {
-    // TODO :
     // 1. crée un générateur aléatoire (random_device + mt19937 + uniform_real_distribution(-1.0, 1.0))
     // 2. remplis W avec des valeurs aléatoires (boucle sur i = lignes, j = colonnes)
     // 3. remplis b avec des valeurs aléatoires (boucle sur i = taille)
@@ -22,13 +21,22 @@ Couche::Couche(int n_entree, int n_sortie)
     }
 }
 
-Vecteur Couche::propagerAvant(const Vecteur& entree) const {
-    // TODO :
-    // 1. calcule z = W * entree + b
-    // 2. applique sigmoide à z
-    // 3. renvoie le résultat
-    // indice : tu as TOUS les opérateurs nécessaires déjà écrits (Matrice*Vecteur, Vecteur+Vecteur)
-    //          et la fonction sigmoide(Vecteur) de Activations.h (n'oublie pas de l'inclure !)
+Vecteur Couche::propagerAvant(const Vecteur& entree) {
+    // 1. mémorise "entree" dans this->derniereEntree
+    // 2. calcule z = W * entree + b, mémorise-le dans this->dernierZ
+    // 3. calcule et renvoie sigmoide(z) 
     Vecteur z = W * entree + b;
+    derniereEntree = entree;
+    dernierZ = z;
     return sigmoide(z);
+}
+
+const Vecteur& Couche::getDerniereEntree() const {
+    return derniereEntree;
+}
+const Vecteur& Couche::getDernierZ() const {
+    return dernierZ;
+}
+const Matrice& Couche::getW() const {
+    return W;
 }

@@ -29,7 +29,16 @@ public:
     // Addition de deux matrices (utile pour certaines opérations d'apprentissage)
     Matrice operator+(const Matrice& autre) const;
 
+    // Renvoie la transposée de cette matrice (lignes/colonnes inversées)
+    Matrice transposee() const;
+
     void afficher() const;
+
+    // Multiplication par un scalaire : chaque élément * k
+    Matrice operator*(double k) const;
+
+    // Soustraction terme à terme
+    Matrice operator-(const Matrice& autre) const;
 };
 
 #endif
