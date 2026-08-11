@@ -19,3 +19,31 @@ Vecteur ReseauDeNeurones::propagerAvant(const Vecteur& entree) {
     }
     return valeur_courante;
 }
+
+void ReseauDeNeurones::entrainerSurExemple(const Vecteur& entree, const Vecteur& cible, double tauxApprentissage) {
+    // 1. Forward pass (remplit derniereEntree/dernierZ dans chaque couche)
+    propagerAvant(entree);
+
+    // 2. Backward pass : on remonte les couches à l'envers
+    Vecteur deltaCourant(0);  // sera mis à jour à chaque itération
+
+    for (int i = static_cast<int>(couches.size()) - 1; i >= 0; i--) {
+        bool estSortie = (i == static_cast<int>(couches.size()) - 1);
+
+        if (estSortie) {
+            // TODO : appelle couches[i].retropropager(...) avec estCoucheDeSortie=true
+            //        deltaSuivant et W_suivante ne sont pas utilisés dans ce cas,
+            //        tu peux passer deltaCourant et couches[i].getW() (peu importe, non utilisés)
+            //        stocke le résultat dans deltaCourant
+            deltaCourant = couches[i].retropropager(deltaCourant, couches[i].getW(), tauxApprentissage, true, cible);
+
+        } else {
+            // TODO : appelle couches[i].retropropager(...) avec estCoucheDeSortie=false
+            //        deltaSuivant = deltaCourant (celui calculé à l'itération précédente)
+            //        W_suivante = couches[i+1].getW()
+            //        cible n'est pas utilisée dans ce cas, tu peux passer "cible" quand même (ignorée)
+            //        stocke le résultat dans deltaCourant
+            deltaCourant = couches[i].retropropager(deltaCourant, couches[i + 1].getW(), tauxApprentissage, false, cible);
+        }
+    }
+}

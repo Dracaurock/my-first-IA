@@ -1,5 +1,6 @@
 #include "Couche.h"
 #include "Activations.h"
+#include "Loss.h"
 #include <random>
 
 Couche::Couche(int n_entree, int n_sortie)
@@ -39,4 +40,26 @@ const Vecteur& Couche::getDernierZ() const {
 }
 const Matrice& Couche::getW() const {
     return W;
+}
+
+Vecteur Couche::retropropager(const Vecteur& deltaSuivant, const Matrice& W_suivante,double tauxApprentissage, bool estCoucheDeSortie, const Vecteur& cible) {
+    Vecteur delta(0);  // valeur temporaire, sera remplacée en dessous
+
+    if (estCoucheDeSortie) {
+        // TODO : calcule delta pour le cas "couche de sortie"
+        // indice : sigmoide(dernierZ) te donne la sortie de cette couche
+        delta = mse_derivee(sigmoide(dernierZ), cible).hadamard(sigmoide_derivee(dernierZ));
+    } else {
+        // TODO : calcule delta pour le cas "couche cachée"
+        // indice : W_suivante.transposee() * deltaSuivant, puis hadamard avec sigmoide_derivee(dernierZ)
+        delta = (W_suivante.transposee() * deltaSuivant).hadamard(sigmoide_derivee(dernierZ));
+    }
+
+    // TODO : calcule gradient_W et gradient_b, puis met à jour W et b
+    // TODO : renvoie delta
+    Matrice gradient_W = delta.produitExterieur(derniereEntree);
+    Vecteur gradient_b = delta;
+    W = W - gradient_W * tauxApprentissage;
+    b = b - gradient_b * tauxApprentissage;
+    return delta;
 }

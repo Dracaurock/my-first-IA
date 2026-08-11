@@ -44,3 +44,24 @@ Vecteur relu(const Vecteur& v) {
     }
     return resultat;
 }
+
+Vecteur sigmoide_derivee(const Vecteur& v) {
+    // TODO :
+    // 1. crée un Vecteur "resultat" de même taille que v
+    // 2. pour chaque élément i : resultat[i] = sigmoide_derivee(v[i])  <- appelle la version "double" !
+    // 3. renvoie resultat
+    Vecteur resultat(v.getTaille());
+    for (int i= 0; i<v.getTaille(); i++){
+        resultat[i] = sigmoide_derivee(v[i]);
+    }
+    return resultat;
+}
+
+Vecteur relu_derivee(const Vecteur& v) {
+    // TODO : même principe avec relu_derivee()
+    Vecteur resultat(v.getTaille());
+    for (int i= 0; i<v.getTaille(); i++){
+        resultat[i] = relu_derivee(v[i]);
+    }
+    return resultat;
+}

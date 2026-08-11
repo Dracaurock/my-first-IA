@@ -25,6 +25,16 @@ public:
     const Vecteur& getDerniereEntree() const;
     const Vecteur& getDernierZ() const;
     const Matrice& getW() const;
-};
+    
+    // Rétropropagation pour cette couche.
+    // deltaSuivant : le delta de la couche SUIVANTE (celle d'après, vers la sortie)
+    // W_suivante : la matrice de poids de la couche suivante (nécessaire pour calculer CE delta)
+    // tauxApprentissage : pour la mise à jour des poids
+    // estCoucheDeSortie : true si c'est la dernière couche (le calcul du delta est différent)
+    // cible : utile seulement si c'est la couche de sortie (pour mse_derivee)
+    //
+    // Renvoie : le delta de CETTE couche (pour que le réseau le transmette à la couche précédente)
+    Vecteur retropropager(const Vecteur& deltaSuivant, const Matrice& W_suivante,double tauxApprentissage, bool estCoucheDeSortie, const Vecteur& cible);
+    };
 
 #endif

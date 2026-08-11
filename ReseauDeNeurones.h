@@ -15,6 +15,9 @@ public:
 
     // Propagation avant à travers TOUTES les couches
     Vecteur propagerAvant(const Vecteur& entree);
+
+    // Entraîne le réseau sur UN exemple (entrée, cible), avec un taux d'apprentissage donné
+    void entrainerSurExemple(const Vecteur& entree, const Vecteur& cible, double tauxApprentissage);
 };
 
 #endif

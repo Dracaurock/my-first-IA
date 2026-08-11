@@ -15,4 +15,7 @@ Vecteur sigmoide(const Vecteur& v);
 // Applique relu() à chaque élément du vecteur, renvoie un nouveau vecteur
 Vecteur relu(const Vecteur& v);
 
+Vecteur sigmoide_derivee(const Vecteur& v);
+Vecteur relu_derivee(const Vecteur& v);
+
 #endif
