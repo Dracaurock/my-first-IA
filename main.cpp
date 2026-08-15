@@ -3,33 +3,38 @@
 #include <iostream>
 
 int main() {
-    std::vector<ExempleEntrainement> exemples = chargerCSV("xor_data.csv", 2);
+    std::cout << "Chargement des donnees..." << std::endl;
+    std::vector<ExempleEntrainement> exemplesEntrainement = chargerMNIST("mnist_medium.csv");
+    std::vector<ExempleEntrainement> exemplesTest = chargerMNIST("mnist_test_medium.csv");
+    std::cout << "Entrainement : " << exemplesEntrainement.size() << " exemples" << std::endl;
+    std::cout << "Test : " << exemplesTest.size() << " exemples" << std::endl;
 
     ReseauDeNeurones reseau;
-    reseau.ajouterCouche(2, 4);
-    reseau.ajouterCouche(4, 1);
+    reseau.ajouterCouche(784, 128);
+    reseau.ajouterCouche(128, 10);
 
-    for (int epoque = 0; epoque < 10000; epoque++) {
-        for (const auto& exemple : exemples) {
-            reseau.entrainerSurExemple(exemple.entree, exemple.cible, 0.5);
+    int nbEpoques = 30;
+    double tauxApprentissage = 0.1;
+
+    std::cout << "Entrainement..." << std::endl;
+    for (int epoque = 0; epoque < nbEpoques; epoque++) {
+        for (const auto& exemple : exemplesEntrainement) {
+            reseau.entrainerSurExemple(exemple.entree, exemple.cible, tauxApprentissage);
+        }
+
+        if ((epoque + 1) % 5 == 0) {  // toutes les 5 époques
+            double precisionTest = reseau.evaluerPrecision(exemplesTest);
+            std::cout << "Epoque " << epoque + 1 << "/" << nbEpoques << " - precision test : " << precisionTest * 100 << "%" << std::endl;
         }
     }
 
-    std::cout << "--- Avant sauvegarde ---" << std::endl;
-    for (const auto& exemple : exemples) {
-        reseau.propagerAvant(exemple.entree).afficher();
-    }
+    double precisionTrain = reseau.evaluerPrecision(exemplesEntrainement);
+    double precisionTest = reseau.evaluerPrecision(exemplesTest);
 
-    reseau.sauvegarder("poids_xor.txt");
+    std::cout << "Precision sur entrainement : " << precisionTrain * 100 << "%" << std::endl;
+    std::cout << "Precision sur test (jamais vu) : " << precisionTest * 100 << "%" << std::endl;
 
-    // Nouveau réseau VIDE, sans entraînement, qui va juste charger les poids
-    ReseauDeNeurones reseauCharge;
-    reseauCharge.charger("poids_xor.txt");
-
-    std::cout << "--- Apres chargement (nouveau reseau, sans entrainement) ---" << std::endl;
-    for (const auto& exemple : exemples) {
-        reseauCharge.propagerAvant(exemple.entree).afficher();
-    }
+    reseau.sauvegarder("poids_mnist.txt");
 
     return 0;
 }

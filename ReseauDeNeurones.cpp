@@ -113,3 +113,42 @@ void ReseauDeNeurones::charger(const std::string& chemin) {
         couches[c].definirPoids(W_chargee, b_charge);
     }
 }
+
+double ReseauDeNeurones::evaluerPrecision(const std::vector<ExempleEntrainement>& exemples){
+    // TODO :
+    // 1. pour chaque exemple : fait propagerAvant(exemple.entree)
+    //    (attention : propagerAvant n'est plus const... donc problème potentiel, vois plus bas)
+    // 2. trouve l'indice du max de la sortie -> chiffrePredit
+    // 3. trouve l'indice du max de exemple.cible -> chiffreReel (même logique que pour trouver le max de sortie,
+    //    puisqu'un one-hot a sa plus grande valeur -1.0- exactement à la bonne position)
+    // 4. compte le nombre de bonnes prédictions
+    // 5. renvoie (nombre_correct / nombre_total_exemples), en double !
+    int correct = 0;
+    for (const auto& exemple : exemples) {
+        Vecteur sortie = propagerAvant(exemple.entree);
+
+        // Trouve l'indice de la plus grande valeur en sortie (= chiffre prédit)
+        int chiffrePredit = 0;
+        double maxValeur = sortie[0];
+        for (int i = 1; i < 10; i++) {
+            if (sortie[i] > maxValeur) {
+                maxValeur = sortie[i];
+                chiffrePredit = i;
+            }
+        }
+
+        // Trouve le vrai chiffre (indice du 1 dans le one-hot de la cible)
+        int chiffreReel = 0;
+        for (int i = 0; i < 10; i++) {
+            if (exemple.cible[i] == 1.0) {
+                chiffreReel = i;
+                break;
+            }
+        }
+
+        if (chiffrePredit == chiffreReel) correct++;
+    }
+
+    return static_cast<double>(correct) / exemples.size();
+
+}

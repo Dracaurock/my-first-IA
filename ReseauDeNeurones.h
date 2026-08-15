@@ -5,6 +5,7 @@
 #include "Couche.h"
 #include "Vecteur.h"
 #include <string>
+#include "Donnees.h"
 
 class ReseauDeNeurones {
 private:
@@ -23,6 +24,8 @@ public:
     // Sauvegarde et charge le réseau
     void sauvegarder(const std::string& chemin) const;
     void charger(const std::string& chemin);
+    // Calcule la précision du réseau sur un ensemble d'exemples (proportion de bonnes prédictions)
+    double evaluerPrecision(const std::vector<ExempleEntrainement>& exemples);
 };
 
 #endif

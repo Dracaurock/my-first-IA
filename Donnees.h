@@ -15,4 +15,9 @@ struct ExempleEntrainement {
 // nbColonnesEntree : combien des premières colonnes sont des features (le reste = cibles)
 std::vector<ExempleEntrainement> chargerCSV(const std::string& chemin, int nbColonnesEntree);
 
+// Transforme un label (ex: 7) en vecteur one-hot de taille nbClasses (ex: [0,0,0,0,0,0,0,1,0,0])
+Vecteur encoderOneHot(int label, int nbClasses);
+
+std::vector<ExempleEntrainement> chargerMNIST(const std::string& chemin);
+
 #endif
