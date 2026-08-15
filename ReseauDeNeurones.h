@@ -4,6 +4,7 @@
 #include <vector>
 #include "Couche.h"
 #include "Vecteur.h"
+#include <string>
 
 class ReseauDeNeurones {
 private:
@@ -18,6 +19,10 @@ public:
 
     // Entraîne le réseau sur UN exemple (entrée, cible), avec un taux d'apprentissage donné
     void entrainerSurExemple(const Vecteur& entree, const Vecteur& cible, double tauxApprentissage);
+
+    // Sauvegarde et charge le réseau
+    void sauvegarder(const std::string& chemin) const;
+    void charger(const std::string& chemin);
 };
 
 #endif

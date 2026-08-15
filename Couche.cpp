@@ -63,3 +63,12 @@ Vecteur Couche::retropropager(const Vecteur& deltaSuivant, const Matrice& W_suiv
     b = b - gradient_b * tauxApprentissage;
     return delta;
 }
+
+const Vecteur& Couche::getB() const {
+    return b;
+}
+
+void Couche::definirPoids(const Matrice& nouveauW, const Vecteur& nouveauB) {
+    W = nouveauW;
+    b = nouveauB;
+}

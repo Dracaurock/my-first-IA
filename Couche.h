@@ -35,6 +35,10 @@ public:
     //
     // Renvoie : le delta de CETTE couche (pour que le réseau le transmette à la couche précédente)
     Vecteur retropropager(const Vecteur& deltaSuivant, const Matrice& W_suivante,double tauxApprentissage, bool estCoucheDeSortie, const Vecteur& cible);
-    };
 
+    const Vecteur& getB() const;
+
+    // Remplace W et b par de nouvelles valeurs (utilisé lors du chargement depuis fichier)
+    void definirPoids(const Matrice& nouveauW, const Vecteur& nouveauB);
+};
 #endif

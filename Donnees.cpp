@@ -13,7 +13,7 @@ std::vector<ExempleEntrainement> chargerCSV(const std::string& chemin, int nbCol
         std::string valeurTexte;
         std::vector<double> valeurs;  // toutes les valeurs de la ligne, en double
 
-        // TODO 1 : découpe "ligne" par virgule (comme dans l'exemple montré plus haut),
+        // TODO 1 : découpe "ligne" par virgule,
         //          convertis chaque morceau en double avec std::stod, ajoute-le à "valeurs"
         while (std::getline(ss, valeurTexte, ',')) {
             try {

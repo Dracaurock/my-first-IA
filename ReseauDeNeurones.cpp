@@ -1,5 +1,5 @@
 #include "ReseauDeNeurones.h"
-
+#include <fstream>
 
 void ReseauDeNeurones::ajouterCouche(int n_entree, int n_sortie) {
     // crée une Couche(n_entree, n_sortie) et ajoute-la à "couches"
@@ -45,5 +45,71 @@ void ReseauDeNeurones::entrainerSurExemple(const Vecteur& entree, const Vecteur&
             //        stocke le résultat dans deltaCourant
             deltaCourant = couches[i].retropropager(deltaCourant, couches[i + 1].getW(), tauxApprentissage, false, cible);
         }
+    }
+}
+
+void ReseauDeNeurones::sauvegarder(const std::string& chemin) const {
+    std::ofstream fichier(chemin);
+
+    // TODO 1 : écris le nombre de couches (couches.size()) sur la première ligne
+    fichier << couches.size() << std::endl;
+
+    for (const auto& c : couches) {
+        const Matrice& W = c.getW();
+        const Vecteur& b = c.getB();
+
+        // TODO 2 : écris "W.getLignes() W.getColonnes()" (séparés par un espace)
+        fichier << W.getLignes() << " " << W.getColonnes() << std::endl;
+        // TODO 3 : écris toutes les valeurs de W (boucle i,j comme dans Matrice::afficher,
+        //          mais avec "fichier <<" au lieu de "std::cout <<")
+        for (int i=0; i<W.getLignes(); i++){
+            for (int j=0; j<W.getColonnes(); j++){
+                fichier << W(i,j) << " ";
+            }
+            fichier << std::endl;
+        }
+        // TODO 4 : écris toutes les valeurs de b (boucle simple)
+        for (int i=0; i<b.getTaille(); i++){
+            fichier << b[i] << " ";
+        }
+        fichier << std::endl;
+    }
+}
+
+void ReseauDeNeurones::charger(const std::string& chemin) {
+    std::ifstream fichier(chemin);
+
+    couches.clear();  // vide le réseau actuel
+
+    int nbCouches;
+    fichier >> nbCouches;
+
+    for (int c = 0; c < nbCouches; c++) {
+        int n_sortie, n_entree;
+        fichier >> n_sortie >> n_entree;
+
+        ajouterCouche(n_entree, n_sortie);  // crée la couche (poids aléatoires pour l'instant)
+
+        // TODO 1 : lis toutes les valeurs de W depuis le fichier (n_sortie x n_entree valeurs)
+        //          et remplis une Matrice W_chargee
+        Matrice W_chargee(n_sortie, n_entree);
+        for (int i=0; i<n_sortie; i++){
+            for (int j=0; j<n_entree;j++){
+                double valeur;
+                fichier >> valeur;
+                W_chargee(i,j) = valeur;
+            }
+        }
+        // TODO 2 : lis toutes les valeurs de b depuis le fichier (n_sortie valeurs)
+        //          et remplis un Vecteur b_charge avec
+        Vecteur b_charge(n_sortie);
+        for (int i=0; i<n_sortie; i++){
+            double valeur;
+            fichier >> valeur;
+            b_charge[i] = valeur;
+        }
+        // TODO 3 : appelle couches[c].definirPoids(W_chargee, b_charge)
+        //          pour remplacer les poids aléatoires par ceux chargés
+        couches[c].definirPoids(W_chargee, b_charge);
     }
 }
