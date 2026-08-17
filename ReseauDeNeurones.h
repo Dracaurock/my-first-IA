@@ -2,30 +2,35 @@
 #define RESEAU_DE_NEURONES_H
 
 #include <vector>
+#include <string>
 #include "Couche.h"
 #include "Vecteur.h"
-#include <string>
 #include "Donnees.h"
+#include "ThreadPool.h"
+
+// Gradients pour tout le réseau, un GradientsCouche par couche
+using GradientsReseau = std::vector<GradientsCouche>;
 
 class ReseauDeNeurones {
 private:
     std::vector<Couche> couches;
+    ThreadPool threadPool;  // pool de threads pour l'entraînement parallèle
 
 public:
-    // Ajoute une couche au réseau (à la fin de la pile)
+    ReseauDeNeurones(int nbThreads = std::thread::hardware_concurrency());
     void ajouterCouche(int n_entree, int n_sortie);
+    Vecteur propagerAvant(const Vecteur& entree) const;  // redevient const !
 
-    // Propagation avant à travers TOUTES les couches
-    Vecteur propagerAvant(const Vecteur& entree);
+    // Calcule les gradients de TOUTES les couches pour UN exemple (thread-safe : aucune modification)
+    GradientsReseau calculerGradientsExemple(const Vecteur& entree, const Vecteur& cible) const;
 
-    // Entraîne le réseau sur UN exemple (entrée, cible), avec un taux d'apprentissage donné
-    void entrainerSurExemple(const Vecteur& entree, const Vecteur& cible, double tauxApprentissage);
+    // Entraîne sur un batch d'exemples EN PARALLELE (un thread par exemple), puis moyenne + applique
+    void entrainerSurBatch(const std::vector<ExempleEntrainement>& batch, double tauxApprentissage);
 
-    // Sauvegarde et charge le réseau
+    double evaluerPrecision(const std::vector<ExempleEntrainement>& exemples) const;  // redevient const !
+
     void sauvegarder(const std::string& chemin) const;
     void charger(const std::string& chemin);
-    // Calcule la précision du réseau sur un ensemble d'exemples (proportion de bonnes prédictions)
-    double evaluerPrecision(const std::vector<ExempleEntrainement>& exemples);
 };
 
 #endif

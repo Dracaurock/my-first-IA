@@ -13,16 +13,21 @@ int main() {
     reseau.ajouterCouche(784, 128);
     reseau.ajouterCouche(128, 10);
 
-    int nbEpoques = 30;
-    double tauxApprentissage = 0.1;
+    int nbEpoques = 60;
+    double tauxApprentissage = 1.0;
 
     std::cout << "Entrainement..." << std::endl;
+    int tailleBatch = 32;
     for (int epoque = 0; epoque < nbEpoques; epoque++) {
-        for (const auto& exemple : exemplesEntrainement) {
-            reseau.entrainerSurExemple(exemple.entree, exemple.cible, tauxApprentissage);
+        for (size_t i = 0; i < exemplesEntrainement.size(); i += tailleBatch) {
+            // Prend un sous-ensemble (batch) de la liste d'exemples
+            size_t fin = std::min(i + tailleBatch, exemplesEntrainement.size());
+            std::vector<ExempleEntrainement> batch(exemplesEntrainement.begin() + i, exemplesEntrainement.begin() + fin);
+
+            reseau.entrainerSurBatch(batch, tauxApprentissage);
         }
 
-        if ((epoque + 1) % 5 == 0) {  // toutes les 5 époques
+        if ((epoque + 1) % 5 == 0) {
             double precisionTest = reseau.evaluerPrecision(exemplesTest);
             std::cout << "Epoque " << epoque + 1 << "/" << nbEpoques << " - precision test : " << precisionTest * 100 << "%" << std::endl;
         }
