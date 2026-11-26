@@ -1,0 +1,29 @@
+# Build outputs
+*.exe
+*.o
+*.obj
+*.out
+*.pdb
+*.ilk
+*.exp
+build/
+# Linux / macOS binaries built with the commands of the README
+/train
+/predire
+/csvVersPng
+/test_cuda
+
+# MNIST data (download it, see README)
+*.csv
+!xor_data.csv
+
+# Photos used to test the image loader
+*.jpg
+*.jpeg
+
+# Weights written by the MNIST training (about 1 MB, regenerate them with ./train)
+poids_mnist.txt
+
+# Editor
+.vscode/*
+!.vscode/tasks.json
